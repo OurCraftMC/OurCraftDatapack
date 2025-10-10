@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SFS",
+    "BTB",
+    "M M"
+  ],
+  "key": {
+    "S":  "minecraft:shulker_shell",
+    "F":  "minecraft:chorus_flower",
+    "B":  "minecraft:breeze_rod",
+    "T":  "minecraft:nether_star",
+    "M":  "minecraft:phantom_membrane"
+  },
+  "result": {
+    "id": "minecraft:elytra",
+    "count": 1,
+    "components": {
+      "minecraft:damage": 432
+    }
+  }
+}

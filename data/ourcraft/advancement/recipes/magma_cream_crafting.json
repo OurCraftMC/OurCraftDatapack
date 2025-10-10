@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "get_magma_block": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "tag": ["minecraft:magma_block"] }
+        ]
+      }
+    }
+  },
+  "requirements": [["get_magma_block"]],
+  "rewards": {
+    "recipes": ["ourcraft:magma_cream_crafting"]
+  }
+}

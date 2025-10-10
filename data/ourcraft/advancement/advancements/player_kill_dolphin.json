@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:adventure/root",
+  "display": {
+    "icon": { "id": "minecraft:cod" },
+    "title": { "text": "别杀怪物,你这个海豚" },
+    "description": { "text": "击败了一只海豚" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "kill_dolphin": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:dolphin"
+        }
+      }
+    }
+  },
+  "requirements": [
+    ["kill_dolphin"]
+  ]
+}

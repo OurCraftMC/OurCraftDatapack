@@ -1,0 +1,25 @@
+{
+  "parent": "ourcraft:advancement_welcome_to_ourcraft",
+  "display": {
+    "icon": { "id": "minecraft:iron_sword" },
+    "title": { "text": "你最好是善意的" },
+    "description": { "text": "攻击了另一位玩家" },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "hit_player": {
+      "trigger": "minecraft:player_hurt_entity",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:player"
+        }
+      }
+    }
+  },
+  "requirements": [
+    ["hit_player"]
+  ]
+}

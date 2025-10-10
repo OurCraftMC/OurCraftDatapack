@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "get_diorite": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "tag": ["minecraft:diorite"] }
+        ]
+      }
+    }
+  },
+  "requirements": [["get_diorite"]],
+  "rewards": {
+    "recipes": ["ourcraft:calcite_crafting"]
+  }
+}

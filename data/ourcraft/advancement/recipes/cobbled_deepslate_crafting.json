@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "get_cobblestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "tag": ["minecraft:cobblestone"] }
+        ]
+      }
+    }
+  },
+  "requirements": [["get_cobblestone"]],
+  "rewards": {
+    "recipes": ["ourcraft:cobbled_deepslate_crafting"]
+  }
+}

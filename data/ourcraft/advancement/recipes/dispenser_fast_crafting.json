@@ -1,0 +1,19 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "get_redstone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": ["minecraft:redstone"] }
+        ]
+      }
+    }
+  },
+  "requirements": [["get_redstone"]],
+  "rewards": {
+    "recipes": [
+        "ourcraft:dispenser_fast_crafting_right"
+    ]
+  }
+}

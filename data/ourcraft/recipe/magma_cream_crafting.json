@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "M"
+  ],
+  "key": {
+    "M":  "minecraft:magma_block"
+  },
+  "result": {
+    "id": "minecraft:magma_cream",
+    "count": 4
+  }
+}

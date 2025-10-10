@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "get_logs": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "tag": ["minecraft:logs"] }
+        ]
+      }
+    }
+  },
+  "requirements": [["get_logs"]],
+  "rewards": {
+    "recipes": ["ourcraft:chest_fast_crafting"]
+  }
+}

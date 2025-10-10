@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "get_shulker_shell": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": ["minecraft:shulker_shell"] }
+        ]
+      }
+    }
+  },
+  "requirements": [["get_shulker_shell"]],
+  "rewards": {
+    "recipes": ["ourcraft:elytra_crafting"]
+  }
+}

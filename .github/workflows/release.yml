@@ -1,0 +1,139 @@
+name: Package and release datapack
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (leave blank to use build-<run number>)"
+        required: false
+        type: string
+      release_name:
+        description: "Release title (leave blank to use the tag)"
+        required: false
+        type: string
+      prerelease:
+        description: "Mark this release as a pre-release"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: datapack-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Prepare release metadata
+        id: metadata
+        shell: bash
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+          INPUT_RELEASE_NAME: ${{ inputs.release_name }}
+        run: |
+          set -euo pipefail
+
+          tag="$INPUT_TAG"
+          if [[ -z "$tag" ]]; then
+            tag="build-${GITHUB_RUN_NUMBER}"
+          fi
+
+          if ! git check-ref-format "refs/tags/$tag" >/dev/null; then
+            echo "Invalid Git tag: $tag" >&2
+            exit 1
+          fi
+
+          release_name="$INPUT_RELEASE_NAME"
+          if [[ -z "$release_name" ]]; then
+            release_name="$tag"
+          fi
+
+          if [[ "$release_name" == *$'\n'* || "$release_name" == *$'\r'* ]]; then
+            echo "Release title must be a single line." >&2
+            exit 1
+          fi
+
+          safe_tag="$(printf '%s' "$tag" | sed 's/[^A-Za-z0-9._-]/-/g')"
+          archive="OurCraftDatapack-${safe_tag}.zip"
+
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "release_name=$release_name" >> "$GITHUB_OUTPUT"
+          echo "archive=$archive" >> "$GITHUB_OUTPUT"
+
+      - name: Validate datapack
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f pack.mcmeta
+          test -d data
+          jq -e '.pack.pack_format and .pack.description' pack.mcmeta >/dev/null
+
+      - name: Create datapack archive
+        id: package
+        shell: bash
+        env:
+          ARCHIVE_NAME: ${{ steps.metadata.outputs.archive }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          git archive \
+            --format=zip \
+            --output="dist/$ARCHIVE_NAME" \
+            HEAD \
+            pack.mcmeta data
+
+          unzip -t "dist/$ARCHIVE_NAME"
+          unzip -Z1 "dist/$ARCHIVE_NAME" | grep -Fx 'pack.mcmeta'
+          unzip -Z1 "dist/$ARCHIVE_NAME" | grep -q '^data/'
+
+          echo "sha256=$(sha256sum "dist/$ARCHIVE_NAME" | cut -d ' ' -f 1)" >> "$GITHUB_OUTPUT"
+
+      - name: Publish GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.metadata.outputs.tag }}
+          RELEASE_NAME: ${{ steps.metadata.outputs.release_name }}
+          ARCHIVE_NAME: ${{ steps.metadata.outputs.archive }}
+          PRERELEASE: ${{ inputs.prerelease }}
+        run: |
+          set -euo pipefail
+
+          args=(
+            "$TAG"
+            "dist/$ARCHIVE_NAME"
+            --repo "$GITHUB_REPOSITORY"
+            --target "$GITHUB_SHA"
+            --title "$RELEASE_NAME"
+            --generate-notes
+          )
+
+          if [[ "$PRERELEASE" == "true" ]]; then
+            args+=(--prerelease)
+          fi
+
+          gh release create "${args[@]}"
+
+      - name: Add build summary
+        shell: bash
+        env:
+          TAG: ${{ steps.metadata.outputs.tag }}
+          ARCHIVE_NAME: ${{ steps.metadata.outputs.archive }}
+          SHA256: ${{ steps.package.outputs.sha256 }}
+        run: |
+          {
+            echo "## Datapack release created"
+            echo
+            echo "- Tag: \`$TAG\`"
+            echo "- File: \`$ARCHIVE_NAME\`"
+            echo "- SHA-256: \`$SHA256\`"
+          } >> "$GITHUB_STEP_SUMMARY"

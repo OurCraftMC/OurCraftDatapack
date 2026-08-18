@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "get_chest": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": ["minecraft:chest"] }
+        ]
+      }
+    }
+  },
+  "requirements": [["get_chest"]],
+  "rewards": {
+    "recipes": ["ourcraft:chest_minecart_crafting"]
+  }
+}

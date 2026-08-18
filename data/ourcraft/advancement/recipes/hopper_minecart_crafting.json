@@ -1,0 +1,17 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "get_hopper": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          { "items": ["minecraft:hopper"] }
+        ]
+      }
+    }
+  },
+  "requirements": [["get_hopper"]],
+  "rewards": {
+    "recipes": ["ourcraft:hopper_minecart_crafting"]
+  }
+}
